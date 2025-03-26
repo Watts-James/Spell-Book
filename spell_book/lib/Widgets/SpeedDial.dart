@@ -12,7 +12,11 @@ class CustomSpeedDial extends StatelessWidget {
       spacing: 12,
       spaceBetweenChildren: 8,
       children: [
-        SpeedDialChild(child: Icon(Icons.book), label: 'Spell Book'),
+        SpeedDialChild(
+          child: Icon(Icons.book),
+          label: 'Spell Book',
+          onTap: () => context.push('/'),
+        ),
         SpeedDialChild(
           child: Icon(Icons.star),
           label: 'All Spells',
