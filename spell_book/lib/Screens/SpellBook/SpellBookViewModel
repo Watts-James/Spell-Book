@@ -1,0 +1,9 @@
+import 'package:flutter/material.dart';
+import 'Spell.dart';
+
+class SpellBookViewModel extends ChangeNotifier {
+
+  Spell _spell = Spell(name: 'Test Spell', level: 9);
+
+  Spell get spell => _spell;
+}
