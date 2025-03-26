@@ -22,36 +22,11 @@ class _AllSpellsState extends State<AllSpells> {
     super.initState();
     if (vm.spellIndexList.isEmpty) {
       print("Fetching spells...");
-      _getSpellIndexes();
-    }
-  }
-
-  // Fetch the spell indexes asynchronously
-  void _getSpellIndexes() async {
-    try {
-      final spellIndexUrl = 'https://www.dnd5eapi.co/api/2014/spells';
-      final response = await http.get(Uri.parse(spellIndexUrl));
-
-      print(response.statusCode);
-      if (response.statusCode == 200) {
-        // Decode the spell index JSON response
-        final jsonData = jsonDecode(response.body);
-        List<dynamic> results = jsonData['results'];
-
-        // Convert to a list of SpellIndex objects
-        List<SpellIndex> spellIndexes = SpellIndex.fromJsonList(results);
+      // Call the method in the ViewModel and pass the callback to update loading state
+      vm.getSpellIndexes((bool loadingState) {
         setState(() {
-          vm.spellIndexList = spellIndexes;
-          isLoading = false; // Data fetched, stop loading
+          isLoading = loadingState;
         });
-        print(vm.spellIndexList);
-      } else {
-        throw Exception('Failed to load spell index');
-      }
-    } catch (e) {
-      print('Error fetching spell indexes: $e');
-      setState(() {
-        isLoading = false; // Stop loading even if there's an error
       });
     }
   }

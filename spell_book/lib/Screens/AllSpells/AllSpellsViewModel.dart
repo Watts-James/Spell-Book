@@ -80,29 +80,26 @@ class AllSpellsViewModel extends ChangeNotifier {
     }
   }
 
-  void getSpellIndexes() async {
-    print("inside get spell indexes");
+  Future<void> getSpellIndexes(Function(bool) updateLoadingState) async {
     try {
       final spellIndexUrl = 'https://www.dnd5eapi.co/api/2014/spells';
       final response = await http.get(Uri.parse(spellIndexUrl));
 
-      print(response.statusCode);
       if (response.statusCode == 200) {
-        // Decode the spell index JSON response
         final jsonData = jsonDecode(response.body);
         List<dynamic> results = jsonData['results'];
 
         // Convert to a list of SpellIndex objects
         List<SpellIndex> spellIndexes = SpellIndex.fromJsonList(results);
-        spellIndexList = spellIndexes;
 
-        print(spellIndexList);
+        spellIndexList = spellIndexes;
+        updateLoadingState(false); // Notify the widget that loading is done
       } else {
         throw Exception('Failed to load spell index');
       }
     } catch (e) {
       print('Error fetching spell indexes: $e');
-      throw Exception('Error fetching spell indexes: $e');
+      updateLoadingState(false); // Stop loading even if there's an error
     }
   }
 }
