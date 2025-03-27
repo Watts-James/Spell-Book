@@ -164,3 +164,51 @@ class Subclass {
     return Subclass(index: json['index'], name: json['name'], url: json['url']);
   }
 }
+
+Spell getMockSpell() {
+  return Spell(
+    index: 'fireball',
+    name: 'Fireball',
+    desc: [
+      'A bright streak flashes from your pointing finger to a point you choose.',
+    ],
+    higherLevel: [
+      'When you cast this spell using a spell slot of 4th level or higher, the damage increases.',
+    ],
+    range: '150 feet',
+    components: ['V', 'S', 'M'],
+    material: 'A tiny ball of bat guano and sulfur',
+    ritual: false,
+    duration: 'Instantaneous',
+    concentration: false,
+    castingTime: '1 action',
+    level: 3,
+    attackType: 'ranged',
+    damage: Damage(
+      damageType: DamageType(
+        index: 'fire',
+        name: 'Fire',
+        url: '/api/damage-types/fire',
+      ),
+      damageAtSlotLevel: {3: '8d6', 4: '9d6', 5: '10d6'},
+    ),
+    school: School(
+      index: 'evocation',
+      name: 'Evocation',
+      url: '/api/magic-schools/evocation',
+    ),
+    classes: [
+      SpellClass(index: 'wizard', name: 'Wizard', url: '/api/classes/wizard'),
+      SpellClass(
+        index: 'sorcerer',
+        name: 'Sorcerer',
+        url: '/api/classes/sorcerer',
+      ),
+    ],
+    subclasses: [
+      Subclass(index: 'evoker', name: 'Evoker', url: '/api/subclasses/evoker'),
+    ],
+    url: '/api/spells/fireball',
+    updatedAt: DateTime.now(),
+  );
+}

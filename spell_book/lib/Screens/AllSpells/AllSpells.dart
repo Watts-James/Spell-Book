@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spell_book/Widgets/SpeedDial.dart';
 import 'package:spell_book/Screens/AllSpells/AllSpellsViewModel.dart';
-import 'package:spell_book/Models/SpellIndex.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'SpellDetailPage.dart';
 
 class AllSpells extends StatefulWidget {
   const AllSpells({super.key, required this.title});
@@ -21,14 +19,41 @@ class _AllSpellsState extends State<AllSpells> {
   void initState() {
     super.initState();
     if (vm.spellIndexList.isEmpty) {
-      print("Fetching spells...");
-      // Call the method in the ViewModel and pass the callback to update loading state
       vm.getSpellIndexes((bool loadingState) {
         setState(() {
           isLoading = loadingState;
         });
       });
     }
+  }
+
+  void _showSheet(BuildContext context, spell) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.90,
+          minChildSize: 0.3,
+          maxChildSize: 0.95,
+          builder: (BuildContext context, ScrollController scrollController) {
+            return FutureBuilder(
+              future: vm.fetchSpellDetails(spell.index),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  return SpellDetailPage(spell: vm.currSpell);
+                }
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -60,6 +85,9 @@ class _AllSpellsState extends State<AllSpells> {
                         ),
                       ),
                       subtitle: Text('Level: ${spell.level}'),
+                      onTap: () {
+                        _showSheet(context, spell);
+                      },
                     ),
                   );
                 },

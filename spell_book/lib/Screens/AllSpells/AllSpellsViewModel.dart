@@ -3,82 +3,81 @@ import 'package:spell_book/Models/Spell.dart';
 import 'package:spell_book/Models/SpellIndex.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:developer';
 
 class AllSpellsViewModel extends ChangeNotifier {
   bool isLoading = false;
   String? errorMessage;
   List<Spell> spellList = [];
   List<SpellIndex> spellIndexList = [];
+  Spell currSpell = getMockSpell();
 
-  // Method to fetch spell details
-  Future<Spell> fetchSpellDetails(String spellIndex) async {
-    print('fetching: $spellIndex');
-    final url = 'https://www.dnd5eapi.co/api/2014/spells/$spellIndex';
-
-    // Send a GET request to the API
-    final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      // If the request is successful, parse the response
-      return Spell.fromJson(jsonDecode(response.body));
-    } else {
-      // If the request fails, throw an exception
-      throw Exception('Failed to load spell details');
-    }
-  }
-
-  Future<List<Spell>> fetchAllSpellDetails(
-    List<SpellIndex> spellIndexes,
-  ) async {
-    List<Spell> fullSpells = [];
-
-    for (var spellIndex in spellIndexes) {
-      try {
-        // Fetch full spell details for each index
-        Spell fullSpell = await fetchSpellDetails(spellIndex.index);
-        fullSpells.add(fullSpell);
-      } catch (e) {
-        // Handle any errors (optional)
-        print('Error fetching spell details for ${spellIndex.name}: $e');
-      }
-    }
-
-    // Return the list of full spells
-    return fullSpells;
-  }
-
-  void getSpellIndexesAndFetchDetails() async {
+  Future<void> fetchSpellDetails(String spellIndex) async {
     try {
-      // Example: Fetch spell index data (you may have already done this part)
-      final spellIndexUrl = 'https://www.dnd5eapi.co/api/2014/spells';
-      final response = await http.get(Uri.parse(spellIndexUrl));
+      isLoading = true;
+      notifyListeners(); // Notify UI that loading has started
+
+      print('Fetching: $spellIndex');
+      final url = 'https://www.dnd5eapi.co/api/spells/$spellIndex';
+      final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
-        // Decode the spell index JSON response
-        final jsonData = jsonDecode(response.body);
-        List<dynamic> results = jsonData['results'];
-
-        // Convert to a list of SpellIndex objects
-        List<SpellIndex> spellIndexes = SpellIndex.fromJsonList(results);
-
-        // Fetch full spell details for each spell index and store in Spells
-        List<Spell> fullSpells = await fetchAllSpellDetails(spellIndexes);
-
-        // You can now use the fullSpells list
-        print('Fetched all spell details:');
-        fullSpells.forEach((spell) {
-          print('Spell Name: ${spell.name}');
-        });
-        spellList = fullSpells;
+        currSpell = Spell.fromJson(jsonDecode(response.body)); // Update spell
       } else {
-        throw Exception('Failed to load spell index');
+        throw Exception('Failed to load spell details');
       }
     } catch (e) {
-      print('Error fetching spell indexes: $e');
-      throw Exception('Error fetching spell indexes: $e');
+      errorMessage = e.toString();
+    } finally {
+      isLoading = false;
+      notifyListeners(); // Notify UI that loading is complete
     }
   }
+
+  // Future<List<Spell>> fetchAllSpellDetails(
+  //   List<SpellIndex> spellIndexes,
+  // ) async {
+  //   List<Spell> fullSpells = [];
+
+  //   for (var spellIndex in spellIndexes) {
+  //     try {
+  //       Spell fullSpell = await fetchSpellDetails(spellIndex.index);
+  //       fullSpells.add(fullSpell);
+  //     } catch (e) {
+  //       print('Error fetching spell details for ${spellIndex.name}: $e');
+  //     }
+  //   }
+
+  //   // Return the list of full spells
+  //   return fullSpells;
+  // }
+
+  // void getSpellIndexesAndFetchDetails() async {
+  //   try {
+  //     final spellIndexUrl = 'https://www.dnd5eapi.co/api/2014/spells';
+  //     final response = await http.get(Uri.parse(spellIndexUrl));
+
+  //     if (response.statusCode == 200) {
+  //       // Decode the spell index JSON response
+  //       final jsonData = jsonDecode(response.body);
+  //       List<dynamic> results = jsonData['results'];
+
+  //       List<SpellIndex> spellIndexes = SpellIndex.fromJsonList(results);
+
+  //       List<Spell> fullSpells = await fetchAllSpellDetails(spellIndexes);
+
+  //       print('Fetched all spell details:');
+  //       fullSpells.forEach((spell) {
+  //         print('Spell Name: ${spell.name}');
+  //       });
+  //       spellList = fullSpells;
+  //     } else {
+  //       throw Exception('Failed to load spell index');
+  //     }
+  //   } catch (e) {
+  //     print('Error fetching spell indexes: $e');
+  //     throw Exception('Error fetching spell indexes: $e');
+  //   }
+  // }
 
   Future<void> getSpellIndexes(Function(bool) updateLoadingState) async {
     try {
@@ -89,11 +88,10 @@ class AllSpellsViewModel extends ChangeNotifier {
         final jsonData = jsonDecode(response.body);
         List<dynamic> results = jsonData['results'];
 
-        // Convert to a list of SpellIndex objects
         List<SpellIndex> spellIndexes = SpellIndex.fromJsonList(results);
 
         spellIndexList = spellIndexes;
-        updateLoadingState(false); // Notify the widget that loading is done
+        updateLoadingState(false);
       } else {
         throw Exception('Failed to load spell index');
       }
