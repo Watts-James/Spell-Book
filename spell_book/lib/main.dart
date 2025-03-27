@@ -19,13 +19,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: appRouter,
-      // title: 'SpellBookDemo',
-      // theme: ThemeData(
-      //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-      // ),
-      // home: const SpellBook(title: 'Spell Book'),
-    );
+    return MaterialApp.router(routerConfig: appRouter);
   }
 }

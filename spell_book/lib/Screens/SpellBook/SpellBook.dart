@@ -14,8 +14,10 @@ class _SpellBookState extends State<SpellBook> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF0E6D2),
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Color(0xFF939c6c),
+        foregroundColor: Colors.white,
         title: Text(widget.title),
       ),
       body: Center(

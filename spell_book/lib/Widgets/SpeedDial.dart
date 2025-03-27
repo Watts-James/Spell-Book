@@ -8,7 +8,9 @@ class CustomSpeedDial extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SpeedDial(
+      backgroundColor: Color(0xFF939c6c),
       animatedIcon: AnimatedIcons.menu_close,
+      animatedIconTheme: IconThemeData(color: Color(0xFFF5F5F5)),
       spacing: 12,
       spaceBetweenChildren: 8,
       children: [

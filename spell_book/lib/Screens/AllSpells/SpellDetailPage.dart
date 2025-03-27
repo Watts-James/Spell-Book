@@ -11,7 +11,8 @@ class SpellDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Spell Details', style: TextStyle(fontSize: 24)),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Color(0xFF939c6c),
+        foregroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -24,7 +25,7 @@ class SpellDetailPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
-                  color: Colors.deepPurple,
+                  color: Colors.black,
                 ),
               ),
               SizedBox(height: 8),
@@ -64,7 +65,6 @@ class SpellDetailPage extends StatelessWidget {
 
   Widget _buildSpellOverview() {
     return Column(
-      // mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -120,7 +120,11 @@ class SpellDetailPage extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey.shade800,
+            ),
           ),
           SizedBox(width: 8),
           Text(
@@ -163,7 +167,7 @@ class SpellDetailPage extends StatelessWidget {
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
-          color: Colors.deepPurple,
+          color: Colors.black,
         ),
       ),
     );
