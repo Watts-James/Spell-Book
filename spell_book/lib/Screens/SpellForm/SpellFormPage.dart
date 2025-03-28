@@ -168,7 +168,16 @@ class _SpellFormPageState extends State<SpellFormPage> {
                 ],
               ),
 
-              CupertinoButton.filled(
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    Color(0xFF939c6c),
+                  ),
+                  foregroundColor: MaterialStateProperty.all<Color>(
+                    Colors.white,
+                  ),
+                ),
+
                 onPressed: () => _submitForm(context),
                 child: Text('Create Spell'),
               ),
@@ -216,7 +225,7 @@ class _SpellFormPageState extends State<SpellFormPage> {
           );
 
           await vm.saveSpell(spell);
-          context.go('/');
+          context.push('/');
         }
       } catch (e) {
         _showErrorDialog('Please add a spell level and name.');
