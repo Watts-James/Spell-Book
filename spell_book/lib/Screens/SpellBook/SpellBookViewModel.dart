@@ -29,8 +29,23 @@ class SpellBookViewModel extends ChangeNotifier {
     }
     updateLoadingState(false);
     spellList = spells;
-    notifyListeners(); // Notify listeners to update the UI
+    notifyListeners();
     return spells;
+  }
+
+  Future<void> getSpellStorage(String spellIndex) async {
+    final prefs = await sp.SharedPreferences.getInstance();
+    try {
+      final spellJson = prefs.getString('spell_$spellIndex');
+      if (spellJson == null) {
+        return null; // Return null if no spell was found
+      }
+      final Map<String, dynamic> spellMap = jsonDecode(spellJson);
+      currSpell = Spell.fromJson(spellMap); // Convert JSON to Spell model
+    } catch (e) {
+      print('Error retrieving spell: $e');
+      return null; // Return null if there was an error
+    }
   }
 
   Future<void> fetchSpellDetails(String spellIndex) async {
@@ -39,11 +54,16 @@ class SpellBookViewModel extends ChangeNotifier {
       notifyListeners();
       final url = 'https://www.dnd5eapi.co/api/spells/$spellIndex';
       final response = await http.get(Uri.parse(url));
-
+      print(response.statusCode);
       if (response.statusCode == 200) {
         currSpell = Spell.fromJson(jsonDecode(response.body));
       } else {
-        throw Exception('Failed to load spell details');
+        try {
+          print("trying from storage");
+          await getSpellStorage(spellIndex);
+        } catch (e) {
+          throw Exception('Failed to load spell details');
+        }
       }
     } catch (e) {
       errorMessage = e.toString();

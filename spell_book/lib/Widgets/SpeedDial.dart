@@ -24,6 +24,11 @@ class CustomSpeedDial extends StatelessWidget {
           label: 'All Spells',
           onTap: () => context.go('/AllSpells'),
         ),
+        SpeedDialChild(
+          child: Icon(Icons.add),
+          label: 'New Spell',
+          onTap: () => context.push('/SpellFormPage'),
+        ),
       ],
     );
   }
