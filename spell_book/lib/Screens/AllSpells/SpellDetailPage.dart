@@ -24,6 +24,7 @@ class SpellDetailPage extends StatelessWidget {
             icon: Icon(Icons.add_circle),
             onPressed: () async {
               await buttonAction(spell);
+              Navigator.pop(context);
             },
           ),
         ],

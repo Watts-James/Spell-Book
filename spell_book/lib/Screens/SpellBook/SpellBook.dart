@@ -18,13 +18,11 @@ class _SpellBookState extends State<SpellBook> {
   @override
   void initState() {
     super.initState();
-    if (vm.spellList.isEmpty) {
-      vm.getSpells((bool loadingState) {
-        setState(() {
-          isLoading = loadingState;
-        });
+    vm.getSpells((bool loadingState) {
+      setState(() {
+        isLoading = loadingState;
       });
-    }
+    });
   }
 
   @override
@@ -132,8 +130,13 @@ class _SpellBookState extends State<SpellBook> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else {
-                  // return SpellDetailPage(spell: vm.currSpell, buttonAction: (spell) => vm.);
-                  return Text('test');
+                  return SpellDetailPage(
+                    spell: vm.currSpell,
+                    buttonAction: (spell) async {
+                      await vm.deleteSpell(spell.index);
+                      setState(() {});
+                    },
+                  );
                 }
               },
             );

@@ -3,6 +3,7 @@ import 'package:spell_book/Models/Spell.dart';
 import 'package:shared_preferences/shared_preferences.dart' as sp;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:go_router/go_router.dart';
 
 class SpellBookViewModel extends ChangeNotifier {
   bool isLoading = false;
@@ -28,6 +29,7 @@ class SpellBookViewModel extends ChangeNotifier {
     }
     updateLoadingState(false);
     spellList = spells;
+    notifyListeners(); // Notify listeners to update the UI
     return spells;
   }
 
@@ -55,53 +57,11 @@ class SpellBookViewModel extends ChangeNotifier {
     currSpell = spell;
   }
 
-  //   Future<void> saveSpell(Spell spell) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final spellJson = jsonEncode({
-  //     'index': spell.index,
-  //     'name': spell.name,
-  //     'desc': spell.desc,
-  //     'higher_level': spell.higherLevel,
-  //     'range': spell.range,
-  //     'components': spell.components,
-  //     'material': spell.material,
-  //     'ritual': spell.ritual,
-  //     'duration': spell.duration,
-  //     'concentration': spell.concentration,
-  //     'casting_time': spell.castingTime,
-  //     'level': spell.level,
-  //     'attack_type': spell.attackType,
-  //     'damage': {
-  //       'damage_type': {
-  //         'index': spell.damage.damageType.index,
-  //         'name': spell.damage.damageType.name,
-  //         'url': spell.damage.damageType.url,
-  //       },
-  //       'damage_at_slot_level': spell.damage.damageAtSlotLevel,
-  //     },
-  //     'school': {
-  //       'index': spell.school.index,
-  //       'name': spell.school.name,
-  //       'url': spell.school.url,
-  //     },
-  //     'classes': spell.classes
-  //         .map((spellClass) => {
-  //               'index': spellClass.index,
-  //               'name': spellClass.name,
-  //               'url': spellClass.url
-  //             })
-  //         .toList(),
-  //     'subclasses': spell.subclasses
-  //         .map((subclass) => {
-  //               'index': subclass.index,
-  //               'name': subclass.name,
-  //               'url': subclass.url
-  //             })
-  //         .toList(),
-  //     'url': spell.url,
-  //     'updated_at': spell.updatedAt.toIso8601String(),
-  //   });
-
-  //   await prefs.setString('spell_${spell.index}', spellJson);
-  // }
+  Future<void> deleteSpell(String spellIndex) async {
+    final prefs = await sp.SharedPreferences.getInstance();
+    await prefs.remove('spell_$spellIndex');
+    // Refresh the spell list after deletion
+    await getSpells((bool loadingState) {});
+    notifyListeners(); // Notify listeners after the list is updated
+  }
 }

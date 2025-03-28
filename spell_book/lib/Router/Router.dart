@@ -8,13 +8,16 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState state) {
-        return const SpellBook(title: 'Spell Book');
+        return SpellBook(
+          key: ValueKey(state.uri.toString()),
+          title: 'Spell Book',
+        );
       },
       routes: <RouteBase>[
         GoRoute(
           path: '/AllSpells',
           builder: (BuildContext context, GoRouterState state) {
-            return const AllSpells(title: 'All Spells');
+            return AllSpells(title: 'All Spells');
           },
         ),
       ],
