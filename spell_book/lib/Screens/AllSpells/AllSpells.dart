@@ -42,11 +42,20 @@ class _AllSpellsState extends State<AllSpells> {
               future: vm.fetchSpellDetails(spell.index),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Color(0xFF939c6c),
+                      ),
+                    ),
+                  );
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else {
-                  return SpellDetailPage(spell: vm.currSpell);
+                  return SpellDetailPage(
+                    spell: vm.currSpell,
+                    buttonAction: (spell) => vm.saveSpell(spell),
+                  );
                 }
               },
             );
@@ -67,7 +76,11 @@ class _AllSpellsState extends State<AllSpells> {
       ),
       body:
           isLoading
-              ? Center(child: CircularProgressIndicator())
+              ? Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF939c6c)),
+                ),
+              )
               : ListView.builder(
                 itemCount: vm.spellIndexList.length,
                 itemBuilder: (context, index) {

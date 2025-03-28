@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:spell_book/Models/Spell.dart';
+import 'package:spell_book/Screens/AllSpells/AllSpellsViewModel.dart';
 
 class SpellDetailPage extends StatelessWidget {
   final Spell spell;
+  final Future<void> Function(Spell) buttonAction;
 
-  SpellDetailPage({required this.spell});
+  const SpellDetailPage({
+    super.key,
+    required this.spell,
+    required this.buttonAction,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +19,14 @@ class SpellDetailPage extends StatelessWidget {
         title: Text('Spell Details', style: TextStyle(fontSize: 24)),
         backgroundColor: Color(0xFF939c6c),
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add_circle),
+            onPressed: () async {
+              await buttonAction(spell);
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
