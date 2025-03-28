@@ -22,7 +22,7 @@ class CustomSpeedDial extends StatelessWidget {
         SpeedDialChild(
           child: Icon(Icons.star),
           label: 'All Spells',
-          onTap: () => context.go('/AllSpells'),
+          onTap: () => context.push('/AllSpells'),
         ),
         SpeedDialChild(
           child: Icon(Icons.add),

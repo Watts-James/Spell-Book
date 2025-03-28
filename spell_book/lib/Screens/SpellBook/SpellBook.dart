@@ -45,59 +45,98 @@ class _SpellBookState extends State<SpellBook> {
                 itemCount: vm.spellList.length,
                 itemBuilder: (context, index) {
                   final spell = vm.spellList[index];
-                  return Card(
-                    margin: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                    elevation: 8,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(24),
-                      onTap: () {
-                        _showSheet(context, spell);
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 16,
-                          horizontal: 20,
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    spell.name,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    'Level: ${spell.level}',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                ],
+                  final previousSpell =
+                      index > 0 ? vm.spellList[index - 1] : null;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (previousSpell == null ||
+                          previousSpell.level != spell.level)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 16,
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                'Level ${spell.level}',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
                               ),
+                              const Divider(
+                                height: 20,
+                                thickness: 1,
+                                indent: 20,
+                                endIndent: 0,
+                                color: Colors.grey,
+                              ),
+                            ],
+                          ),
+                        ),
+                      Card(
+                        margin: EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 16,
+                        ),
+                        elevation: 8,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(24),
+                          onTap: () {
+                            _showSheet(context, spell);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 16,
+                              horizontal: 20,
                             ),
-                            Icon(
-                              Icons.chevron_right,
-                              color: Colors.grey[600],
-                              size: 28,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        spell.name,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                      SizedBox(height: 4),
+                                      Text(
+                                        'Level: ${spell.level}',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.chevron_right,
+                                  color: Colors.grey[600],
+                                  size: 28,
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   );
                 },
               ),
