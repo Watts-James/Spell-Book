@@ -140,6 +140,8 @@ class AllSpellsViewModel extends ChangeNotifier {
 
         List<SpellIndex> spellIndexes = SpellIndex.fromJsonList(results);
 
+        spellIndexes.sort((a, b) => a.level.compareTo(b.level));
+
         spellIndexList = spellIndexes;
         updateLoadingState(false);
       } else {

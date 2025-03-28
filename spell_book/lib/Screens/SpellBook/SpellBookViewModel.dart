@@ -27,6 +27,9 @@ class SpellBookViewModel extends ChangeNotifier {
         }
       }
     }
+
+    spells.sort((a, b) => a.level.compareTo(b.level));
+
     updateLoadingState(false);
     spellList = spells;
     notifyListeners();
